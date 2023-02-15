@@ -14,13 +14,11 @@ const validateFeedback = [
         .isMongoId(),
     check("stars")
         .exists()
-        .isInt()
-        .custom((value, { req }) => {
-            if (value >= 0 && value <= 5) {
-                return true
-            } else {
-                return false
-            }
+        .custom((value) => {
+            if (!(parseInt(value) === value)) return false
+            if (!(value <= 5)) return false;
+            if (!(value >= 1)) return false;
+            return true
         }),
     (req, res, next) => {
         validateResult(req, res, next)

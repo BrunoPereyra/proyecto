@@ -5,7 +5,7 @@ const ServicesSoldUser = require("../models/servicesSoldUser")
 const feedbackCtrll = async (req, res) => {
     const { idUser } = req
     const { coment, ServicesSoldUserId, stars, userByServiceId } = req.body
-
+    
     const service = await ServicesSoldUser.findById(ServicesSoldUserId)
     const user = await Users.findById(userByServiceId)
     if (!service || !user) {
@@ -14,7 +14,7 @@ const feedbackCtrll = async (req, res) => {
         })
     }
 
-    if ( JSON.stringify(service.User[0]) !==JSON.stringify(user.id) ) {
+    if ( JSON.stringify(service.User[0]) !== JSON.stringify(user.id) ) {
         return res.status(200).json({
             res: "Id User y Id service does not match"
         })
@@ -34,6 +34,7 @@ const feedbackCtrll = async (req, res) => {
 
     let userByService = await Users.findById(userByServiceId)
     let ServicesSoldUserSave = await ServicesSoldUser.findById(ServicesSoldUserId)
+    
     if (!ServicesSoldUserSave || !userByService) {
         return res.status(404).json({
             res: "server error"
@@ -42,7 +43,7 @@ const feedbackCtrll = async (req, res) => {
     try {
         userByService.FeedbackService = userByService.FeedbackService.concat(feedbackSave.id)
         ServicesSoldUserSave.FeedbackService = ServicesSoldUserSave.FeedbackService.concat(feedbackSave.id)
-
+        ServicesSoldUserSave.stars = ServicesSoldUserSave.stars.concat(stars)
         await userByService.save()
         await ServicesSoldUserSave.save()
 

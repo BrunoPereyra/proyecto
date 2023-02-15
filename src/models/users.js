@@ -69,7 +69,11 @@ const SchemaUser = new Schema({
       type: String,
       required: true
     }
-  }]
+  }],
+  isPremium:{
+    type:Number,
+    default:0
+  }
 })
 SchemaUser.set("toJSON", {
   transform: (returnedObject) => {

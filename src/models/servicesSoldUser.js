@@ -40,7 +40,14 @@ const SchemaServicesSoldUser = new Schema({
     //     type: [String, String, String, String],
     //     require: true
     // },
+    stars: {
+        type: [],
+    },
 
+    visitorCounter: {
+        type: Number,
+        default: 0
+    },
     serviceStatistics: [{
 
         revenue: {
