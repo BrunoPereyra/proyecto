@@ -36,14 +36,8 @@ const searchServiceCtrll = async (req, res) => {
                 Service = await ServicesSoldUser.find({
                     $text: { $search: refService }
                 })
-                    .sort({ visitorCounter: -1 })
                     .populate("User")
-                    .sort((a, b) => {
-                        if (a.user.isPremium === b.user.isPremium) {
-                            return 0;
-                        }
-                        return a.user.isPremium ? -1 : 1
-                    })
+                    .sort({ visitorCounter: -1 ,"User.isPremium": -1})
                     .limit(20)
 
             } else if (filter[0]) {
@@ -51,13 +45,8 @@ const searchServiceCtrll = async (req, res) => {
                     Service = await ServicesSoldUser.find({
                         $text: { $search: refService }
                     })
-                        .populate({
-                            path: "User",
-                            options: {
-                                sort: { "isPremium": -1 }
-                            }
-                        })
-                        .sort({"User.isPremium": 1})
+                        .populate("User")
+                        .sort({ "isPremium":1 })
                         .limit(20)
 
                 } catch (error) {
