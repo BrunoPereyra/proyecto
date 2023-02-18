@@ -72,7 +72,7 @@ const SchemaUser = new Schema({
   }],
   isPremium:{
     type:Number,
-    default:0
+    default: -1
   }
 })
 SchemaUser.set("toJSON", {
