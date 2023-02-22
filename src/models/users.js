@@ -70,9 +70,15 @@ const SchemaUser = new Schema({
       required: true
     }
   }],
-  isPremium:{
-    type:Number,
-    default: -1
+  isPremium: {
+    state: {
+      type: Number,
+      default: -1
+    },
+    created: {
+      type: Date,
+      default: 0
+    }
   }
 })
 SchemaUser.set("toJSON", {

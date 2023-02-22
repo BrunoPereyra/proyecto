@@ -8,17 +8,23 @@ const searchServiceCtrll = async (req, res) => {
     if (id) {
         var Services = ""
         if (id.length == 24 && typeof id == "string") {
-            Services = await ServicesSoldUser.findById(id)
-            Services.visitorCounter = await Services.visitorCounter + 1
-            await Services.save()
-            if (!Services) {
+            try {
+                Services = await ServicesSoldUser.findById(id)
+                Services.visitorCounter = await Services.visitorCounter + 1
+                await Services.save()
+                if (!Services) {
+                    return res.status(404).json({
+                        res: "the service does not exist"
+                    })
+                }
+                return res.status(200).json({
+                    res: Services
+                })
+            } catch (error) {
                 return res.status(404).json({
-                    res: "the service does not exist"
+                    res: "id error or service error"
                 })
             }
-            return res.status(200).json({
-                res: Services
-            })
 
         } else {
             return res.status(404).json({
@@ -37,26 +43,41 @@ const searchServiceCtrll = async (req, res) => {
                     $text: { $search: refService }
                 })
                     .populate("User")
-                    .sort({ visitorCounter: -1, "User.isPremium": -1 })
+                    .sort({ visitorCounter: -1, "User.isPremium.state": -1 })
                     .limit(20)
 
             } else if (filter[0]) {
                 try {
-                    Service = await ServicesSoldUser.find({
-                        $text: { $search: refService }
-                    })
-                    .populate("User")
-                    .sort(function(a, b) {
-                        if (a.User.isPremium === b.User.isPremium) {
-                            return 0;
+                    Service = await ServicesSoldUser.aggregate([
+                        {
+                          $match: { $text: { $search: refService } }
+                        },
+                        {
+                          $lookup: {
+                            from: "users",
+                            localField: "User",
+                            foreignField: "_id",
+                            as: "User"
+                          }
+                        },
+                        {
+                          $unwind: "$User"
+                        },
+                        {
+                          $sort: {
+                            "User.isPremium.state": -1
+                          }
+                        },
+                        {
+                          $limit: 20
                         }
-                        return a.User.isPremium == 1 ? -1 : 1;
-                    })
-                    .limit(20);
-                    
+                      ]);
 
-                } catch (error) {
-                    console.log(error)
+                } catch  (err){
+                    // Service = await ServicesSoldUser.find({
+                    //     $text: { $search: refService }
+                    // })
+                    console.log("ERROR")
                 }
 
 

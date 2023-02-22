@@ -29,8 +29,8 @@ app.use("/login", validateCreateLogin, require("./routes/login.routes"))
 app.use("/createService", validateCreateServiceSold, useExtractor, require("./routes/ServicesSoldcreate.routes"))
 app.use("/feedbackService", validateFeedback, useExtractor, require("./routes/feedback.routes"))
 app.use("/services", validateSearchService, useExtractor, require("./routes/searchService.routes"))
-app.use("/suscripcion", useExtractor, require("./routes/SuscripcionCreate.routes"))
-app.use("/suscripcionStatus", useExtractor, require("./routes/suscripcionStatus.routes"))
+app.use("/subscription", useExtractor, require("./routes/subscriptionCreate.routes"))
+app.use("/subscriptionStatus", useExtractor, require("./routes/subscriptionStatus.routes"))
 
 
 app.use(handleError)

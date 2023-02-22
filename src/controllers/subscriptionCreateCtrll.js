@@ -1,16 +1,16 @@
 const mercadopago = require('mercadopago');
 const User = require("../models/users")
+const { TOKEN_ACCESS } = require("../config")
 
 mercadopago.configure({
-  access_token: 'TU_ACCESS_TOKEN'
+  access_token: TOKEN_ACCESS.ACCESS_TOKEN_PRUEBA_SUBSCRIPTION
 });
 
-const suscripcionCreate = async (req, res) => {
-  const { idUser } = req
-  const user = await User.find(idUser)
-  const monto = 400
 
-  // Crea un objeto de preferencia con los datos necesarios
+const SubscriptionCreate = async (req, res) => {
+  const { idUser } = req
+  const user = await User.findById(idUser)
+  const monto = 400
   const preference = {
     items: [
       {
@@ -22,14 +22,13 @@ const suscripcionCreate = async (req, res) => {
       }
     ],
     payer: {
-      nameUser: user.nameUser,
-      fullName: user.fullName,
+      name: user.fullName,
       email: user.Email
     },
     back_urls: {
-      success: 'https://ejemplo.com/exito',
-      failure: 'https://ejemplo.com/error',
-      pending: 'https://ejemplo.com/pendiente'
+      success: "http://localhost:3000/SubscriptioStatus",
+      failure: "http://localhost:3000/SubscriptioStatus",
+      pending: "http://localhost:3000/SubscriptioStatus"
     },
     auto_return: 'approved',
     payment_methods: {
@@ -41,15 +40,20 @@ const suscripcionCreate = async (req, res) => {
       ],
       installments: 1
     },
+    date_of_expiration: new Date(Date.now() + 3600000).toISOString(),
+
   };
+
 
   mercadopago.preferences.create(preference)
     .then(response => {
-      res.redirect(response.body.init_point);
+      res.json({
+        res: response.body.init_point
+      });
     })
     .catch(error => {
       console.error(error);
       res.status(500).send('Error al generar la preferencia');
     });
 }
-module.exports = suscripcionCreate
+module.exports = SubscriptionCreate;
