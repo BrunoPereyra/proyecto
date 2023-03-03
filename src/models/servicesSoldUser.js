@@ -22,7 +22,7 @@ const SchemaServicesSoldUser = new Schema({
         required: true
     },
     img: {
-        type: [],
+        type: Buffer,
     },
     date: {
         type: Date,

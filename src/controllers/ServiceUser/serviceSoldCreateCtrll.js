@@ -1,9 +1,12 @@
-const Users = require("../models/users")
-const ServicesSoldUser = require("../models/servicesSoldUser")
+const Users = require("../../models/users")
+const ServicesSoldUser = require("../../models/servicesSoldUser")
+
 
 const serviceSoldCreateCtrll = async (req, res) => {
     const { idUser } = req
     const { nameService, description, zone, price, time, img, labels } = req.body
+    const imageBuffer = req.file.buffer;
+    
     const user = await Users.findById(idUser)
 
     if (!user.servicesSoldUser[0]) {
@@ -13,7 +16,7 @@ const serviceSoldCreateCtrll = async (req, res) => {
             zone,
             price,
             time,
-            img,
+            img:imageBuffer,
             labels,
             date: new Date(),
             User: idUser

@@ -1,5 +1,5 @@
 const express = require("express")
-const serviceSoldCreateCtrll = require("../controllers/serviceSoldCreateCtrll")
+const serviceSoldCreateCtrll = require("../controllers/ServiceUser/serviceSoldCreateCtrll")
 const Router = express.Router()
 
 Router.post("/",serviceSoldCreateCtrll)

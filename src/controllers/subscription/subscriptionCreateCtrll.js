@@ -1,6 +1,6 @@
 const mercadopago = require('mercadopago');
-const User = require("../models/users")
-const { TOKEN_ACCESS } = require("../config")
+const User = require("../../models/users")
+const { TOKEN_ACCESS } = require("../../config")
 
 mercadopago.configure({
   access_token: TOKEN_ACCESS.ACCESS_TOKEN_PRUEBA_SUBSCRIPTION

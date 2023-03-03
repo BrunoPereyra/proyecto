@@ -1,5 +1,5 @@
 const mercadopago = require("mercadopago");
-const Users = require("../models/users")
+const Users = require("../../models/users")
 
 const subscriptionStatus = (req, res) => {
   const { collection_id } = req.query

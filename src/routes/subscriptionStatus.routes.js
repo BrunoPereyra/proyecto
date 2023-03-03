@@ -1,5 +1,5 @@
 const express = require("express")
-const subscriptionStatus = require("../controllers/subscriptionStatusCtrll")
+const subscriptionStatus = require("../controllers/subscription/subscriptionStatusCtrll")
 const Routes = express.Router()
 
 Routes.get("/",subscriptionStatus)

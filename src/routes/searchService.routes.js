@@ -1,7 +1,7 @@
 const express = require("express")
-const searchServiceCtrll = require("../controllers/searchServiceCtrll")
+const searchServiceCtrll = require("../controllers/ServiceUser/searchServiceCtrll")
 const Router = express.Router()
 
-Router.get("/",searchServiceCtrll)
+Router.post("/",searchServiceCtrll)
 
 module.exports = Router

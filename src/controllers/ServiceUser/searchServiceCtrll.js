@@ -1,10 +1,9 @@
-const ServicesSoldUser = require("../models/servicesSoldUser")
+const ServicesSoldUser = require("../../models/servicesSoldUser")
 
 const searchServiceCtrll = async (req, res) => {
     const { refService, id, page, } = req.query
-    const { filter = [null, null] } = req.body
-
-
+    const { filter = [false, false] } = req.body
+    
     if (id) {
         var Services = ""
         if (id.length == 24 && typeof id == "string") {
@@ -32,52 +31,42 @@ const searchServiceCtrll = async (req, res) => {
             })
         }
     }
-
+    
     if (typeof (refService) == "string") {
         var Service
         try {
-
-            if (filter[0] && filter[1]) {
-
-                Service = await ServicesSoldUser.find({
-                    $text: { $search: refService }
-                })
-                    .populate("User")
-                    .sort({ visitorCounter: -1, "User.isPremium.state": -1 })
-                    .limit(20)
-
-            } else if (filter[0]) {
+            
+            if (filter[0]) {
                 try {
                     Service = await ServicesSoldUser.aggregate([
                         {
-                          $match: { $text: { $search: refService } }
+                            $match: { $text: { $search: refService } }
                         },
                         {
-                          $lookup: {
-                            from: "users",
-                            localField: "User",
-                            foreignField: "_id",
-                            as: "User"
-                          }
+                            $lookup: {
+                                from: "users",
+                                localField: "User",
+                                foreignField: "_id",
+                                as: "User"
+                            }
                         },
                         {
-                          $unwind: "$User"
+                            $unwind: "$User"
                         },
                         {
-                          $sort: {
-                            "User.isPremium.state": -1
-                          }
+                            $sort: {
+                                "User.isPremium.state": -1
+                            }
                         },
                         {
-                          $limit: 20
+                            $limit: 20
                         }
-                      ]);
+                    ]);
 
-                } catch  (err){
-                    // Service = await ServicesSoldUser.find({
-                    //     $text: { $search: refService }
-                    // })
-                    console.log("ERROR")
+                } catch (err) {
+                    Service = await ServicesSoldUser.find({
+                        $text: { $search: refService }
+                    })
                 }
 
 
@@ -91,7 +80,7 @@ const searchServiceCtrll = async (req, res) => {
             } else {
                 Service = await ServicesSoldUser.find({
                     $text: { $search: refService }
-                })
+                }).populate("User")
             }
 
             if (Service.length == 0) {

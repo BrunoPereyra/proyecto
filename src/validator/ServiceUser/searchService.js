@@ -1,10 +1,11 @@
 const { check } = require("express-validator")
-const { validateResult } = require("../helpers/validateHelper")
+const { validateResult } = require("../../helpers/validateHelper")
 
 const validateSearchService = [
     check("refService")
         .exists()
-        .isString(),
+        .isString()
+        .optional(),
     check("id")
         .exists()
         .isMongoId()
@@ -19,6 +20,13 @@ const validateSearchService = [
     check("filter[1]")
         .isBoolean()
         .optional(),
+    
+     check().custom((value, { req }) => {
+        if (!req.query.refService && !req.query.id ) {
+            throw new Error('Debe enviar al menos uno de los params');
+        }
+        return true;
+    }),
 
     (req, res, next) => {
         validateResult(req, res, next)

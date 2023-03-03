@@ -1,6 +1,6 @@
-const Users = require("../models/users")
-const FeedbackService = require("../models/feedback")
-const ServicesSoldUser = require("../models/servicesSoldUser")
+const Users = require("../../models/users")
+const FeedbackService = require("../../models/feedback")
+const ServicesSoldUser = require("../../models/servicesSoldUser")
 
 const feedbackCtrll = async (req, res) => {
     const { idUser } = req
