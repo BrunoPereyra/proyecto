@@ -21,8 +21,15 @@ const SchemaServicesSoldUser = new Schema({
         type: [],
         required: true
     },
-    img: {
-        type: Buffer,
+    image: {
+        url: {
+            type: String,
+            required: true
+        },
+        public_id: {
+            type: String,
+            required: true
+        }
     },
     date: {
         type: Date,

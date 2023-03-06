@@ -37,7 +37,6 @@ const searchServiceCtrll = async (req, res) => {
         try {
             
             if (filter[0]) {
-                try {
                     Service = await ServicesSoldUser.aggregate([
                         {
                             $match: { $text: { $search: refService } }
@@ -62,12 +61,6 @@ const searchServiceCtrll = async (req, res) => {
                             $limit: 20
                         }
                     ]);
-
-                } catch (err) {
-                    Service = await ServicesSoldUser.find({
-                        $text: { $search: refService }
-                    })
-                }
 
 
             } else if (filter[1]) {

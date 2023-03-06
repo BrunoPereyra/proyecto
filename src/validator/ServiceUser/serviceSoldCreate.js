@@ -4,9 +4,9 @@ const { validateResult } = require("../../helpers/validateHelper")
 
 const validateCreateServiceSold = [
     check("nameService")
-        .exists()
-        .isString()
-        .isLength({ min: 2, max: 35 }),
+    .exists()
+    .isString()
+    .isLength({ min: 2, max: 35 }),
     check("description")
         .exists()
         .isString()
@@ -17,12 +17,10 @@ const validateCreateServiceSold = [
     check("price")
         .exists()
         .isString(),
-        
-    check("time").isArray(),
-    check('time.*.unit')
+    check('time_unit')
         .exists()
         .isString(),
-    check('time.*.magnitud')
+    check('time_magnitud')
         .exists()
         .isString()
         .custom((value, { req }) => {
@@ -34,12 +32,15 @@ const validateCreateServiceSold = [
                 return false
             }
         }),
-
-    // check('labels').isArray(),
-    // check('labels').isLength(4),
-    // check("labels.*").isString(),
-    // check("labels.*").isLength({ min: 1, max: 23 }),
-
+        check().custom((value, { req }) => {
+            if (!req.file.fieldname) {
+              throw new Error("Image is required");
+            } else if (!req.file.mimetype.startsWith("image/")) {
+              throw new Error("Invalid image format");
+            } else {
+              return true;
+            }
+          }),
     (req, res, next) => {
         validateResult(req, res, next)
     }
