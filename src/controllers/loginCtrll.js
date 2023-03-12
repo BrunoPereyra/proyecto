@@ -1,7 +1,7 @@
 const User = require("../models/users")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const { privatekey } = require("../config")
+const { PRIVATEKEY } = require("../config")
 
 const loginCtrll = async (req, res) => {
     const { nameUser, password } = req.body
@@ -21,7 +21,7 @@ const loginCtrll = async (req, res) => {
             id: user.id,
             fullName: user.fullName
         }
-        const token = jwt.sign(dataToken, privatekey)
+        const token = jwt.sign(dataToken, PRIVATEKEY)
         return res.status(200).json({
            token,
            nameUser: user.nameUser

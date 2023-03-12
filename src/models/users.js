@@ -17,6 +17,16 @@ const SchemaUser = new Schema({
     type: String,
     required: true
   },
+  avatar: {
+    url: {
+      type: String,
+      required: true
+    },
+    public_id: {
+      type: String,
+      required: true
+    }
+  },
   date: {
     type: Date,
     required: true

@@ -1,7 +1,7 @@
 const express = require("express")
-const serviceSoldCreateCtrll = require("../controllers/ServiceUser/serviceSoldCreateCtrll")
+const serviceSoldCreateCtrllBasic = require("../controllers/ServiceUser/serviceSoldCreateBasicCtrll")
 const Router = express.Router()
 
-Router.post("/",serviceSoldCreateCtrll)
+Router.post("/",serviceSoldCreateCtrllBasic)
 
 module.exports = Router

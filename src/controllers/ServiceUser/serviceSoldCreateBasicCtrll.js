@@ -10,8 +10,8 @@ const serviceSoldCreateCtrll = async (req, res) => {
     const { idUser } = req
     const { nameService, description, zone, price, time_unit, time_magnitud, labels } = req.body
     const user = await Users.findById(idUser)
-    const result = await cloudinary.uploader.upload(req.file.path)
-
+    const cloudinaryResult = await cloudinary.uploader.upload(req.file.path)
+   
     fs.unlink(req.file.path, (err) => {
         if (err) {
             return res.status(500).json({
@@ -21,7 +21,7 @@ const serviceSoldCreateCtrll = async (req, res) => {
         console.log('Archivo eliminado con éxito');
     });
 
-    if (user.servicesSoldUser[4]) {
+    if (!user.servicesSoldUser[0]) {
         const servicesUser = new ServicesSoldUser({
             nameService,
             description,
@@ -29,8 +29,8 @@ const serviceSoldCreateCtrll = async (req, res) => {
             price,
             time: [{ time_unit, time_magnitud }],
             image: {
-                url: result.url,
-                public_id: result.public_id
+                url: cloudinaryResult.url,
+                public_id: cloudinaryResult.public_id
             },
             labels,
             date: new Date(),
@@ -43,7 +43,7 @@ const serviceSoldCreateCtrll = async (req, res) => {
             res: servicesUserSave
         })
     } else {
-        res.status(406).json({
+        return res.status(406).json({
             res: "servicesSoldUser exist"
         })
     }

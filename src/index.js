@@ -7,7 +7,7 @@ const morgan = require("morgan")
 
 const { validateCreateSignup } = require("./validator/signup")
 const { validateCreateLogin } = require("./validator/login")
-const { validateCreateServiceSold } = require("./validator/ServiceUser/serviceSoldCreate")
+const { validateCreateServiceSoldBasic } = require("./validator/ServiceUser/serviceSoldCreatebasic")
 const { validateFeedback } = require("./validator/ServiceUser/feedback")
 const { validateSearchService } = require("./validator/ServiceUser/searchService")
 const { validatorCreateNoteManageService } = require("./validator/notes/createNoteManageService")
@@ -29,16 +29,20 @@ var corsOptions = {
 app.use(cors(corsOptions))
 app.use(morgan("dev"))
 
-app.use("/signup", validateCreateSignup, require("./routes/signup.routes"))
+app.use("/signup",upload.single("avatar"), validateCreateSignup, require("./routes/signup.routes"))
 app.use("/login", validateCreateLogin, require("./routes/login.routes"))
-app.use("/createService", upload.single("image"), validateCreateServiceSold, useExtractor, require("./routes/ServicesSoldcreate.routes"))
-app.use("/feedbackService", validateFeedback, useExtractor, require("./routes/feedback.routes"))
+
+app.use("/createServiceBasic", upload.single("image"), validateCreateServiceSoldBasic, useExtractor, require("./routes/ServicesSoldcreate.routes"))
 app.use("/services", validateSearchService, useExtractor, require("./routes/searchService.routes"))
+app.use("/feedbackService", validateFeedback, useExtractor, require("./routes/feedback.routes"))
+
 app.use("/subscription", useExtractor, require("./routes/subscriptionCreate.routes"))
 app.use("/subscriptionStatus", useExtractor, require("./routes/subscriptionStatus.routes"))
+
 app.use("/createNotes", validatorCreateNoteManageService, useExtractor, require("./routes/Notes/CreateNotesManegeService.routes"))
 app.use("/deleteNotes", validatorDeleteNote, useExtractor, require("./routes/Notes/DeleteNote.routes"))
 app.use("/GetNotes", useExtractor, require("./routes/Notes/GetNotes.routes"))
+
 app.use("/ProfileGet", useExtractor, require("./routes/ProfileGet.routes"))
 
 

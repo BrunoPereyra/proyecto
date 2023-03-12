@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     let token = ""
     if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
         token = authorization.substring(7)
-    }else{
+    } else {
         return res.status(401).json({ error: 'token missing or invalid' })
         next()
     }
@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
         const decodetoken = jwt.verify(token, PRIVATEKEY)
         const user = await Users.findById(decodetoken.id)
         if (user == null) {
-            return res.status(203).json({ error: 'token missing or invalid' })
+            return res.status(401).json({ error: 'token invalid or user not exist' })
         }
         req.idUser = decodetoken.id
         next()
