@@ -4,7 +4,7 @@ const ServicesSoldUser = require("../../models/servicesSoldUser")
 
 const feedbackCtrll = async (req, res) => {
     const { idUser } = req
-    const { coment, ServicesSoldUserId, stars, userByServiceId } = req.body
+    const { comment, ServicesSoldUserId, stars, userByServiceId } = req.body
     
     const service = await ServicesSoldUser.findById(ServicesSoldUserId)
     const user = await Users.findById(userByServiceId)
@@ -21,7 +21,7 @@ const feedbackCtrll = async (req, res) => {
     }
 
     const feedback = new FeedbackService({
-        coment,
+        comment,
         stars,
         date: new Date(),
         userByService: userByServiceId,
@@ -59,8 +59,9 @@ const feedbackCtrll = async (req, res) => {
             res: "server error"
         })
     } else {
+        const feedbackfind = await FeedbackService.findById(feedbackSave._id).populate("ByUser")
         return res.status(201).json({
-            res: feedbackSave
+            res: feedbackfind
         })
     }
 }

@@ -3,12 +3,17 @@ const ServicesSoldUser = require("../../models/servicesSoldUser")
 const searchServiceCtrll = async (req, res) => {
     const { refService, id, page, } = req.query
     const { filter = [false, false] } = req.body
-    
+
     if (id) {
         var Services = ""
         if (id.length == 24 && typeof id == "string") {
             try {
                 Services = await ServicesSoldUser.findById(id)
+                    .populate({
+                        path: "FeedbackService",
+                        populate: { path: "ByUser" }
+                    });
+                
                 Services.visitorCounter = await Services.visitorCounter + 1
                 await Services.save()
                 if (!Services) {
@@ -31,36 +36,36 @@ const searchServiceCtrll = async (req, res) => {
             })
         }
     }
-    
+
     if (typeof (refService) == "string") {
         var Service
         try {
-            
+
             if (filter[0]) {
-                    Service = await ServicesSoldUser.aggregate([
-                        {
-                            $match: { $text: { $search: refService } }
-                        },
-                        {
-                            $lookup: {
-                                from: "users",
-                                localField: "User",
-                                foreignField: "_id",
-                                as: "User"
-                            }
-                        },
-                        {
-                            $unwind: "$User"
-                        },
-                        {
-                            $sort: {
-                                "User.isPremium.state": -1
-                            }
-                        },
-                        {
-                            $limit: 20
+                Service = await ServicesSoldUser.aggregate([
+                    {
+                        $match: { $text: { $search: refService } }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "User",
+                            foreignField: "_id",
+                            as: "User"
                         }
-                    ]);
+                    },
+                    {
+                        $unwind: "$User"
+                    },
+                    {
+                        $sort: {
+                            "User.isPremium.state": -1
+                        }
+                    },
+                    {
+                        $limit: 20
+                    }
+                ]);
 
 
             } else if (filter[1]) {

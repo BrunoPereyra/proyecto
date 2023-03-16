@@ -2,7 +2,7 @@ const { check } = require("express-validator")
 const { validateResult } = require("../../helpers/validateHelper")
 
 const validateFeedback = [
-    check("coment")
+    check("comment")
         .exists()
         .isString()
         .isLength({ max: 200 }),
