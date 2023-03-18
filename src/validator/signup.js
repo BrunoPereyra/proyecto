@@ -6,14 +6,16 @@ const ValidateResult = async (req, res, next) => {
         validationResult(req).throw()
         return next()
     } catch (err) {
-        fs.unlink(req.file.path, (err) => {
-            if (err) {
-                return res.status(500).json({
-                    res: "error server"
-                })
-            }
-            console.log('Archivo eliminado con éxito');
-        });
+        if (req.file) {
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    return res.status(500).json({
+                        res: "error server"
+                    })
+                }
+                console.log('Archivo eliminado con éxito');
+            });
+        }
         return res.status(403).json({ res: err.array() })
     }
 }

@@ -1,4 +1,4 @@
-const Users = require("../models/users")
+const Users = require("../../models/users")
 const ProfileGet = async (req, res) => {
     const { idUser } = req
     try {
@@ -6,7 +6,7 @@ const ProfileGet = async (req, res) => {
             .populate("servicesSoldUser")
             .populate({
                 path: 'FeedbackService',
-                options: { limit: 5, sort: { createdAt: -1 } },
+                options: { limit: 5, sort: { date: -1 } },
                 populate:{path:"ByUser"}
               })
         res.status(200).json({

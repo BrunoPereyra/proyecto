@@ -1,6 +1,6 @@
 const express = require("express")
 const Router = express.Router()
-const ProfileGet = require("../controllers/ProfileGetCtrll")
+const ProfileGet = require("../../controllers/profiles/ProfileGetCtrll")
 
 Router.get("/", ProfileGet)
 

@@ -12,7 +12,10 @@ const searchServiceCtrll = async (req, res) => {
                     .populate({
                         path: "FeedbackService",
                         populate: { path: "ByUser" }
-                    });
+                    })
+                    .populate({
+                        path:"User"
+                    })
                 
                 Services.visitorCounter = await Services.visitorCounter + 1
                 await Services.save()
