@@ -56,7 +56,8 @@ const SignupCtrll = async (req, res) => {
             return res.status(201).json({
                 res: {
                     token,
-                    nameUser: user.nameUser
+                    nameUser: user.nameUser,
+                    id: userSave.id,
                 }
             })
         } else {

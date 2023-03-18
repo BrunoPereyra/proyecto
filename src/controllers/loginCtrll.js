@@ -23,8 +23,9 @@ const loginCtrll = async (req, res) => {
         }
         const token = jwt.sign(dataToken, PRIVATEKEY)
         return res.status(200).json({
-           token,
-           nameUser: user.nameUser
+            token,
+            nameUser: user.nameUser,
+            id: user.id,
         })
     } else {
         return res.status(401).json({
