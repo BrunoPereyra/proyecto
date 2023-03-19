@@ -61,13 +61,25 @@ app.use("/ProfileGetOther", validateCreateProfileGetOther, useExtractor, require
 const Message = require("./models/message")
 app.get('/api/messages', useExtractor, async (req, res) => {
 
-  const { idUser } = req
+  const { idUser } = req;
   const recipientId = req.query.recipientId;
-  console.log(idUser, recipientId);
-  const messages = await Message.find({ sender: idUser, recipient: recipientId });
-
+  const messages = await Message.find({
+    $or: [
+      { senderId: idUser, recipientId: recipientId },
+      { senderId: recipientId, recipientId: idUser }
+    ]
+  });
+  console.log(messages);
   res.json(messages);
+
 });
+const Conversation = require("./models/conversation")
+app.get("/GetAllChats", useExtractor, async (req, res) => {
+  const { idUser } = req;
+  const messages = await Conversation.find({ members: idUser }).populate("members")
+  res.json(messages);
+
+})
 
 
 app.use(handleError)
