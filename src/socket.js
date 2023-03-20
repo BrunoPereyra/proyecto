@@ -3,14 +3,16 @@ const Message = require("./models/message");
 
 const socket = (io) => {
     io.on('connection', (socket) => {
-
+        const senderId = socket.request._query.userId; // OBTENEMOS EL ID DEL USUARIO QUE ENVÍA EL MENSAJE
+        socket.join(senderId)
+        
         // Manejar la desconexión del usuario
         socket.on('disconnect', () => {
+            console.log("disconnect");
         });
-
+        
         // Manejar los mensajes enviados por el usuario
-        socket.on('message', async (text, recipientId) => {
-            const senderId = socket.request._query.userId; // OBTENEMOS EL ID DEL USUARIO QUE ENVÍA EL MENSAJE
+        socket.on('message_destinatario', async (text, recipientId) => {
 
             // BUSCAMOS LA CONVERSACIÓN EXISTENTE ENTRE LOS DOS USUARIOS
             const conversation = await Conversation.findOne({
@@ -31,7 +33,7 @@ const socket = (io) => {
 
                 conversationId = savedConversation._id;
             }
-
+            
             // CREAMOS UN NUEVO MENSAJE Y LO GUARDAMOS EN LA COLECCIÓN DE MENSAJES DE LA CONVERSACIÓN
             const message = new Message({
                 conversationId,
@@ -39,12 +41,10 @@ const socket = (io) => {
                 recipientId,
                 text
             });
-
-            await message.save();
-
-            // ENVIAMOS EL MENSAJE A AMBOS USUARIOS
-            io.to(senderId).emit('message', message);
-            io.to(recipientId).emit('message', message);
+            
+            const newMessage = await message.save();
+            io.to(senderId).emit('message', newMessage);
+            io.to(recipientId).emit('message', newMessage);
         });
     });
 };
