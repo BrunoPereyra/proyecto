@@ -10,6 +10,12 @@ const socket = require("./socket")
 
 const server = http.createServer(app)
 const io = require("socket.io")(server, {
+  connectionStateRecovery: {
+    // the backup duration of the sessions and the packets
+    maxDisconnectionDuration: 2 * 60 * 1000,
+    // whether to skip middlewares upon successful recovery
+    skipMiddlewares: true,
+  },
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"]
@@ -69,7 +75,6 @@ app.get('/api/messages', useExtractor, async (req, res) => {
       { senderId: recipientId, recipientId: idUser }
     ]
   });
-  console.log(messages);
   res.json(messages);
 
 });

@@ -3,14 +3,22 @@ const Message = require("./models/message");
 
 const socket = (io) => {
     io.on('connection', (socket) => {
+        if (socket.recovered) {
+            // recovery was successful: socket.id, socket.rooms and socket.data were restored
+            console.log("seccion recuperada");
+        } else {
+            // new or unrecoverable session
+            console.log("seccion perdida ");
+
+        }
         const senderId = socket.request._query.userId; // OBTENEMOS EL ID DEL USUARIO QUE ENVÍA EL MENSAJE
         socket.join(senderId)
-        
+
         // Manejar la desconexión del usuario
         socket.on('disconnect', () => {
             console.log("disconnect");
         });
-        
+
         // Manejar los mensajes enviados por el usuario
         socket.on('message_destinatario', async (text, recipientId) => {
 
@@ -33,7 +41,7 @@ const socket = (io) => {
 
                 conversationId = savedConversation._id;
             }
-            
+
             // CREAMOS UN NUEVO MENSAJE Y LO GUARDAMOS EN LA COLECCIÓN DE MENSAJES DE LA CONVERSACIÓN
             const message = new Message({
                 conversationId,
@@ -41,7 +49,7 @@ const socket = (io) => {
                 recipientId,
                 text
             });
-            
+
             const newMessage = await message.save();
             io.to(senderId).emit('message', newMessage);
             io.to(recipientId).emit('message', newMessage);
